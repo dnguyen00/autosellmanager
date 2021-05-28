@@ -76,7 +76,7 @@ func main() { //two methods, BEST_PRICE or RAP
 				continue
 			}
 
-			collections[i].SellPrice = priceFlags
+			collections[i].SellPrice = priceFlags - 1
 		}
 	}
 
