@@ -47,10 +47,16 @@ func main() { //two methods, BEST_PRICE or RAP
 	colTemp := GetCollections(userId, "", []Structs.Collections{})
 
 	for i := 0; i < len(colTemp); i++ {
+		blFlag := false
 		for j := 0; j < len(blacklistedItems); j++ {
 			if colTemp[i].AssetId == blacklistedItems[j] {
+				blFlag = true
 				break
 			}
+		}
+
+		if blFlag {
+			continue
 		}
 
 		collections = append(collections, colTemp[i])
