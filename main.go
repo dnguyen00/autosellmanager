@@ -62,6 +62,23 @@ func main() { //two methods, BEST_PRICE or RAP
 		collections = append(collections, colTemp[i])
 	}
 
+	if settings.Method == "RESET" {
+		xsrf := GetXsrf(settings.Cookie)
+
+		if xsrf == "" {
+			log.Fatal("could not get xsrf")
+		}
+
+		for i := 0; i < len(collections); i++ {
+			sellFlags := TakeOffSale(settings.Cookie, xsrf, collections[i].AssetId, collections[i].UserAssetId)
+			if sellFlags {
+				fmt.Printf("Taken %s offsale\n", collections[i].Name)
+			}
+		}
+
+		return
+	}
+
 	if settings.Method == "BEST_PRICE" {
 		for i := 0; i < len(collections); i++ {
 			priceFlags := GetBestPrice(settings.Cookie, collections[i].AssetId)

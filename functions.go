@@ -168,3 +168,27 @@ func SellItem(cookie string, xsrf string, assetid int64, uaid int64, price int) 
 
 	return true //better solution to check statuscode so it can "handle" shit if people want to add that
 }
+
+func TakeOffSale(cookie string, xsrf string, assetid int64, uaid int64) bool { //does not account for token invalidation
+	req, err := http.NewRequest("POST", "https://www.roblox.com/asset/toggle-sale", bytes.NewBufferString(fmt.Sprintf("assetId=%d&userAssetId=%d&price=%d&sell=false", assetid, uaid, 0)))
+	if err != nil {
+		return false
+	}
+
+	req.AddCookie(&http.Cookie{Name: ".ROBLOSECURITY", Value: cookie})
+	req.Header.Add("x-csrf-token", xsrf)
+	req.Header.Set("content-type", "application/x-www-form-urlencoded")
+
+	res, err := httpClient.Do(req)
+	if err != nil {
+		return false
+	}
+
+	//return strings.Contains(string(body), "true") //i know i know, i should parse it against a struct but i'm too lazy
+
+	if res.StatusCode != 200 {
+		return false
+	}
+
+	return true //better solution to check statuscode so it can "handle" shit if people want to add that
+}
